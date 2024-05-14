@@ -1,0 +1,5 @@
+#1 Score: 3890, Name: Testing, Date: 03/31/2023
+#2 Score: 900, Name: Jane Doe, Date: 01/01/1998
+#3 Score: 900, Name: Jane Doe, Date: 01/01/1998
+#4 Score: 700, Name: Paul, Date: 02/28/2023
+#5 Score: 180, Name: Testing, Date: 03/21/2023
