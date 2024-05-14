@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<link rel="stylesheet" type="text/css" href="https://paulsprojects.neocities.org/myStyle.css"/>
+<link rel="shortcut icon" type="image/ico" href="https://paulsprojects.neocities.org/iconGb.ico" />
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" >
+          var scoreDir = 1;
+          var nameDir = 1;
+          var dateDir = 1;
+          var gameDir = 1;
+          
+            async function getData() {
+              
+                //Get the jsonArray from the json file
+                const requestURL = 'https://paulsprojects.neocities.org/scoreData.json';
+                const request = new Request(requestURL);
+                
+                //wait for the array then take the array as json data
+                const response = await fetch(request);
+                var scoreData = await response.json();
+                
+                //stringify the json data to make it readible, then parse the string as a jsonArray
+                scoreData = JSON.stringify(scoreData);
+                const jsonObject = JSON.parse(scoreData);
+                
+                
+                var entriesNum = Object.keys(jsonObject.entries).length;
+                
+                var scoresTable = document.getElementById('scoresTable');
+                
+                for (var i = 0; i < entriesNum; i++) {
+                  
+                  var newRow = scoresTable.insertRow(1+i);
+                  
+                  var scoreCell = newRow.insertCell(0);
+                  var nameCell = newRow.insertCell(1);
+                  var dateCell = newRow.insertCell(2);
+                  var gameCell = newRow.insertCell(3);
+                  
+                  scoreCell.innerHTML = jsonObject.entries[i].score;
+                  nameCell.innerHTML = jsonObject.entries[i].name;
+                  dateCell.innerHTML = jsonObject.entries[i].date;
+                  gameCell.innerHTML = jsonObject.entries[i].game;
+                }
+                
+                sortTable(0,0,0);
+
+            }
+          
+          //Searches the table for a specific term in a certain row depending on which is selected
+          function sortTableSearch(dropIndex, searchTerm) {
+            
+            table = document.getElementById("scoresTable");
+            rowNum = table.rows.length;
+            
+            switch(dropIndex) {
+              case(0):
+                for (var i = 1; i < rowNum; i++) {
+                  if ( table.rows[i].getElementsByTagName("TD")[dropIndex].innerHTML != searchTerm ) {
+                    table.deleteRow(i);
+                    rowNum -= 1;
+                    i -= 1;
+                  }
+                }
+                break;
+              case(1):
+                for (var i = 1; i < rowNum; i++) {
+                  if ( !(table.rows[i].getElementsByTagName("TD")[dropIndex].innerHTML.toLowerCase().includes(searchTerm.toLowerCase())) ) {
+                    table.deleteRow(i);
+                    rowNum -= 1;
+                    i -= 1;
+                  }
+                }
+                break;
+              case(2):
+                var day, month, year, date;
+                
+                
+                for (var i = 1; i < rowNum; i++) {
+                  date = table.rows[i].getElementsByTagName("TD")[dropIndex].innerHTML;
+                  day = date.slice(0,2);
+                  month = date.slice(3,5);
+                  year = date.slice(6,10);
+                  
+                  if ( (day != searchTerm) && (month != searchTerm) && (year != searchTerm) ) {
+                    table.deleteRow(i);
+                    rowNum -= 1;
+                    i -= 1;
+                  }
+                }
+                break;
+              case(3):
+                for (var i = 1; i < rowNum; i++) {
+                  if ( !(table.rows[i].getElementsByTagName("TD")[dropIndex].innerHTML.toLowerCase().includes(searchTerm.toLowerCase())) ) {
+                    table.deleteRow(i);
+                    rowNum -= 1;
+                    i -= 1;
+                  }
+                }
+                break;
+            }
+            
+          }
+          
+          //Resets the table's elements to it's original state
+          function resetTable() {
+            table = document.getElementById("scoresTable");
+            searchType = document.getElementById("searchType");
+            search = document.getElementById("search");
+            
+            rowNum = table.rows.length;            
+            for (var i = 1; i < rowNum; i++) {
+              table.deleteRow(1);
+            }
+            getData();
+            
+            scoreDir = 1;
+            nameDir = 1;
+            dateDir = 1;
+            gameDir = 1;
+            
+            searchType.selectedIndex = 0;
+            search.value = "";
+          }
+          
+          //Sorts the table based on which row is selected
+          function sortTable(type, index, directionID) {
+                var table, rows, switching, x, y, shouldSwitch, direction;
+                table = document.getElementById("scoresTable");
+                direction = switchDir(directionID);
+                switching = true;
+                rows = table.rows;
+                rowNum = rows.length - 1;
+                switch(type) {
+                  case(0):
+                    //Sorting by Number
+                      for (var i = 1; i < rowNum; i++) {
+                          
+                          x = rows[i].getElementsByTagName("TD")[index];
+                          y = rows[i + 1].getElementsByTagName("TD")[index];
+                          
+                          if (direction == 0) {
+                             
+                            if (Number(x.innerHTML) < Number(y.innerHTML)) {
+                              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                              i = 0;                              }
+                            
+                          } else if (direction == 1){
+                            
+                            if (Number(x.innerHTML) > Number(y.innerHTML)) {
+                              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                              i = 0;
+                            }
+                            
+                          }
+                          
+                          
+                      }
+    
+                    
+                    break;
+                  case(1):
+                    //Sorting by Text
+                      for (var i = 1; i < rowNum; i++) {
+                            
+                            x = rows[i].getElementsByTagName("TD")[index];
+                            y = rows[i + 1].getElementsByTagName("TD")[index];
+                            
+                            if (direction == 0) {
+                              
+                              if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                i = 0;
+                              }
+                              
+                            } else if (direction == 1){
+                              
+                              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                i = 0;
+                              }
+                              
+                            }
+                            
+                            
+                        }
+                    break;
+                  case(2):
+                    //Sorting by Date
+                    for (var i = 1; i < rowNum; i++) {
+                          
+                          x = rows[i].getElementsByTagName("TD")[index];
+                          y = rows[i + 1].getElementsByTagName("TD")[index];
+                          
+                          xDate = new Date(x.innerHTML).getTime();
+                          yDate = new Date(y.innerHTML).getTime();
+                          
+                          if (direction == 0) {
+                             
+                            if (xDate < yDate) {
+                              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                              i = 0;                              }
+                            
+                          } else if (direction == 1){
+                            
+                            if (xDate > yDate) {
+                              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                              i = 0;
+                            }
+                            
+                          }
+                          
+                          
+                    }   
+                    break;
+                }
+                
+                
+            }
+            
+          //Switches the variable for direction based on which one has been input
+          function switchDir(headID) {
+            switch(headID) {
+              case(0):
+                if (scoreDir == 0) {
+                  scoreDir = 1
+                } else {
+                  scoreDir = 0
+                }
+                return scoreDir;
+              case(1):
+                if (nameDir == 0) {
+                  nameDir = 1
+                } else {
+                  nameDir = 0
+                }
+                return nameDir;
+              case(2):
+                if (dateDir == 0) {
+                  dateDir = 1
+                } else {
+                  dateDir = 0
+                }
+                return dateDir;
+              case(3):
+                if (gameDir == 0) {
+                  gameDir = 1
+                } else {
+                  gameDir = 0
+                }
+                return gameDir;
+            }
+          }
+          
+        </script>
+
+  
+	<title>
+	Griffin Gatherer Highscores
+	</title>
+	
+    <body onload="getData()">
+    
+    <div id = "topText"> 
+      <h1>Top Scores for Griffin Gatherer</h1>
+      <p>Click on the Table Headers to sort by each row</p>
+    </div>
+    
+    <div id="data">
+			<table id = "scoresTable">
+			  <tbody>
+          <tr id = "tableHeader">
+      		  <th onclick="sortTable(0,0,0)">Score</th>
+      			<th onclick="sortTable(1,1,1)">Name</th>
+      		  <th onclick="sortTable(2,2,2)">Date</th>
+      		  <th onclick="sortTable(1,3,3)">Game</th>
+      		</tr>				
+      	</tbody>
+			</table>
+    </div>
+    
+    <div id = "searchBar">
+      <label for="search">Search Parameter:</label>
+      <input type="text" id="search" name="searchBox">
+      <select name="SearchList" id="searchType">
+        <option value="score">Score</option>
+        <option value="name">Name</option>
+        <option value="date">Date</option>
+        <option value="game">Game</option>
+      </select>
+      <input type="submit" id= "submitBtn" value="Search" onclick="sortTableSearch(searchType.selectedIndex, search.value)">
+      <button id = "btnReset" onclick="resetTable()">Reset Table to Default</button>
+      <p>Type in a term then click the search button to search </p> 
+      <p>Click the reset button to reset the table to default</p>
+    </div>
+    
+    </body>
+</html>

@@ -1,0 +1,68 @@
+h1 {
+    color: rgb(255, 255, 0);
+    text-align: center;
+    text-shadow: #FC0 1px 0 10px;
+}
+
+h1::before {
+    content: url('https://paulsprojects.neocities.org/iconGbr.ico');
+    margin-right: 10px;
+}
+h1::after {
+    content: url('https://paulsprojects.neocities.org/iconGb.ico');
+    margin-left: 10px;
+}
+
+body {
+    background-color: rgb(187, 153, 255);
+    color: rgb(255, 255, 10);
+    font-family: Courier;
+    font-size: 1.1em;
+    font-kerning: auto;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: separate;
+    border-spacing: 15px;
+}
+
+td {
+    font-weight: bold;
+}
+
+#topText {
+    text-align: center;
+}
+
+#scoresTable {
+    cursor: default;
+    width: 50%;
+    text-align: center;
+    table-layout: fixed;
+    padding: 5px;
+}
+
+#tableHeader {
+    cursor: pointer;
+    font-size: 1.3em;
+    text-shadow: #FC0 1px 0 10px;
+
+}
+
+#searchBar{
+    text-align: center;
+}
+
+#searchType{
+  appearance: auto;
+}
+#submitBtn {
+  cursor: pointer;
+  appearance: auto;
+}
+#btnReset {
+  cursor: pointer;
+  appearance: auto;
+}
